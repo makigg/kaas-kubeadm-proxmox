@@ -4,7 +4,7 @@
 
 K3s上にClusterリソースを作成すると、Proxmox上にK8sクラスタがデプロイされるようにする。
 
-![](images/overview.drawio.svg)
+![overview image](images/overview.drawio.svg)
 
 使用技術
 
@@ -29,6 +29,7 @@ K3s上にClusterリソースを作成すると、Proxmox上にK8sクラスタが
 3. Cluster APIのインストール
 4. ClusterClassの作成
 5. Clusterデプロイ
+6. CSIの設定
 
 ## ハードウェアの構成
 
