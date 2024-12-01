@@ -25,11 +25,12 @@ K3s上にClusterリソースを作成すると、Proxmox上にK8sクラスタが
 ## 大まかな手順
 
 1. Proxmox VEそのものの設定
-2. ゴールデンイメージの作成(Packer)
-3. Cluster APIのインストール
-4. ClusterClassの作成
-5. Clusterデプロイ
-6. CSIの設定
+2. KaaS管理用K8sの構築
+3. ゴールデンイメージの作成(Packer)
+4. Cluster APIのインストール
+5. ClusterClassの作成
+6. Clusterデプロイ
+7. CSIの設定
 
 ## ハードウェアの構成
 
@@ -82,7 +83,20 @@ vgextend pve /dev/nvme0n1p1
 
 Proxmoxの画面(pve1 > Disks > LVM-Thin)からLVM Thinプールを作成する。
 
+## KaaS管理用K8sの構築
+
+KaaSを管理するためのK8sを構築する。
+Proxmox VEに立てたVMにK3sを構築した。
+
+[ドキュメント](https://docs.k3s.io/ja/quick-start)の通りにインストールするだけ。
+
+```shell
+curl -sfL https://get.k3s.io | sh -
+```
+
 ## VMのゴールデンイメージを作成する
+
+PackerとWSL2の相性が悪かったので、KaaS管理用のVMで作業する。
 
 ### packerをインストールする。
 
