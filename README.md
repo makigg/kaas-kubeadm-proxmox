@@ -2,7 +2,7 @@
 
 家に転がっていた古いPCにProxmox VEを入れて、その上にKaaSを構築した時のメモ。
 
-こんなことをやりたい。
+K3s上にClusterリソースを作成すると、Proxmox上にK8sクラスタがデプロイされるようにする。
 
 ![](images/overview.drawio.svg)
 
