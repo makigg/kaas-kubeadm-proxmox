@@ -1,0 +1,17 @@
+apiVersion: addons.cluster.x-k8s.io/v1beta1
+kind: ClusterResourceSet
+metadata:
+  name: csi-proxmox
+  namespace: kaas
+spec:
+  strategy: Reconcile
+  clusterSelector:
+    matchLabels:
+      csi-proxmox: "true"
+  resources:
+    - name: proxmox-csi-plugin
+      kind: ConfigMap
+    - name: csi-proxmox-config
+      kind: Secret
+    - name: storage-class-proxmox
+      kind: ConfigMap

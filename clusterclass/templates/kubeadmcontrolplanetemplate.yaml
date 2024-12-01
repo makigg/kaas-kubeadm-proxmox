@@ -1,0 +1,72 @@
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: KubeadmControlPlaneTemplate
+metadata:
+  name: kubeadm-v1.30.5
+  namespace: kaas
+spec:
+  template:
+    spec:
+      kubeadmConfigSpec:
+        files:
+        - content: |
+            #!/bin/bash
+
+            # Copyright 2020 The Kubernetes Authors.
+            #
+            # Licensed under the Apache License, Version 2.0 (the "License");
+            # you may not use this file except in compliance with the License.
+            # You may obtain a copy of the License at
+            #
+            #     http://www.apache.org/licenses/LICENSE-2.0
+            #
+            # Unless required by applicable law or agreed to in writing, software
+            # distributed under the License is distributed on an "AS IS" BASIS,
+            # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+            # See the License for the specific language governing permissions and
+            # limitations under the License.
+
+            set -e
+
+            # Configure the workaround required for kubeadm init with kube-vip:
+            # xref: https://github.com/kube-vip/kube-vip/issues/684
+
+            # Nothing to do for kubernetes < v1.29
+            KUBEADM_MINOR="$(kubeadm version -o short | cut -d '.' -f 2)"
+            if [[ "$KUBEADM_MINOR" -lt "29" ]]; then
+              exit 0
+            fi
+
+            IS_KUBEADM_INIT="false"
+
+            # cloud-init kubeadm init
+            if [[ -f /run/kubeadm/kubeadm.yaml ]]; then
+              IS_KUBEADM_INIT="true"
+            fi
+
+            # ignition kubeadm init
+            if [[ -f /etc/kubeadm.sh ]] && grep -q -e "kubeadm init" /etc/kubeadm.sh; then
+              IS_KUBEADM_INIT="true"
+            fi
+
+            if [[ "$IS_KUBEADM_INIT" == "true" ]]; then
+              sed -i 's#path: /etc/kubernetes/admin.conf#path: /etc/kubernetes/super-admin.conf#' \
+                /etc/kubernetes/manifests/kube-vip.yaml
+            fi
+          owner: root:root
+          path: /etc/kube-vip-prepare.sh
+          permissions: "0700"
+        initConfiguration:
+          nodeRegistration:
+            kubeletExtraArgs:
+              provider-id: "proxmox://{{ ds.meta_data.instance_id }}"
+        joinConfiguration:
+          nodeRegistration:
+            kubeletExtraArgs:
+              provider-id: "proxmox://{{ ds.meta_data.instance_id }}"
+        preKubeadmCommands:
+        - /etc/kube-vip-prepare.sh
+        users:
+        - name: root
+          sshAuthorizedKeys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDhQKh2EmK+5FWCw89zHw1aBewgp8S2L/mNlZr10Dx6Dv7x6HCt/ooLJiwIXz+Lfj9pB2ikLbZ14zOP635dCjnSRFky8yHJwH5RpvuLFFOLmoELRFFNJPq5cuVsDXjMod/1rDSajqXY0Ml0cmQIQKvR1Nr/+8rVWrvVjt0pwsWEPpBNPl0L/xgrHgaQIQj6JAQco14XnY0n6bXEOewswKDWmUxdPYoOgMH+dokjjKuvJAuBDhYiGYrD9XwClduyDORDt3OwmuZYDGEIQLBa4oXLF1J8zF0tIDDwYlN+vh2zx2HxLJ6kIk+2FgW+mnvVi3s3v174GqjeIqoMF8EJtcB+IH4ACqruPdjiAgKR581wStcdfjISjcP0AYe9t6L86uG1aIViWPWL7RPZNY4KR4RsYwk9kXGOA6LVr0VmfJvNslU7+oCb67XlxLRHUNBOMy8EfadIXDoIz3FUch1HW2BNbhkStrujrEqk1B5/zlsFRQ7shmI3ccHr9QByslxcFgs=
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCjp0UvoAQy+wUpfEHr1YVU04htWc0qnVhtSCeXVD1Q8kiz/7itIKKfKGvz+PFU9kNcQlrQaUxQ/lh9SUC0y/epVLcxm3TBI99HTeeWTrO1RLvDIR0CS3iC2USPMEX0jbhF2fUoE+Q+vaZArNsP/zR1fEV2Dc5HW/dgjcKwNN9Xr7p6BujkwOQXM8DdqcTTMIdRoZhisD7LGDfWkro1fcoo0eeMGgdcGx/DJLw0s840t1teVxE0Payt4LGMtg/jOCOCXRTzmvLDSfdxBjxYGhT2IK/GFPoC/L2frFaie0N2dRRGI0j4SBgNQbJudQanJvsuT35UkMUrxgkANyrbFQmVmcJhuwo3mbXRLaBSojpBv3AQ3eF5X1WKvTNcZ3H04E0acReUtQcy00CP+8rI1uZ+bhC6NxgR2g1GPKoJZA2EJp4LF9oqyczQzKz62dXGXV5I9c2Sf2Q+q4bVIQjKc79U5EdQnQkTEIyEfI+ib+XvclrT1c1M95uTw1cogOUBDhk=

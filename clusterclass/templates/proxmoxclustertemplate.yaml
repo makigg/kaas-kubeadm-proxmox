@@ -1,0 +1,23 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxClusterTemplate
+metadata:
+  name: kubeadm-v1.30.5
+  namespace: kaas
+spec:
+  template:
+    spec:
+      allowedNodes:
+      - pve1
+      controlPlaneEndpoint:
+        # should replaced by jsonPatches
+        host: 192.168.10.210
+        port: 6443
+      dnsServers:
+      - 8.8.8.8
+      - 8.8.4.4
+      ipv4Config:
+        addresses:
+        # should replaced by jsonPatches
+        - "192.168.10.211-192.168.10.214"
+        gateway: 192.168.10.1
+        prefix: 24

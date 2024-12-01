@@ -1,0 +1,24 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: cluster01
+  namespace: kaas
+  labels:
+    csi-proxmox: "true"
+spec:
+  topology:
+    class: kubeadm-v1.30.5
+    version: v1.30.5
+    controlPlane:
+      replicas: 1
+    workers:
+      machineDeployments:
+      - class: default-worker
+        name: cpu-node
+        replicas: 1
+    variables:
+    - name: controlPlaneHost
+      value: "192.168.10.210"
+    - name: ipV4Addresses
+      value:
+      - "192.168.10.211-192.168.10.214"

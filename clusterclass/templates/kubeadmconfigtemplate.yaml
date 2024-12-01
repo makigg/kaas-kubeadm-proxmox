@@ -1,0 +1,17 @@
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: KubeadmConfigTemplate
+metadata:
+  name: kubeadm-v1.30.5-default-worker
+  namespace: kaas
+spec:
+  template:
+    spec:
+      joinConfiguration:
+        nodeRegistration:
+          kubeletExtraArgs:
+            provider-id: "proxmox://{{ ds.meta_data.instance_id }}"
+      users:
+      - name: root
+        sshAuthorizedKeys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDhQKh2EmK+5FWCw89zHw1aBewgp8S2L/mNlZr10Dx6Dv7x6HCt/ooLJiwIXz+Lfj9pB2ikLbZ14zOP635dCjnSRFky8yHJwH5RpvuLFFOLmoELRFFNJPq5cuVsDXjMod/1rDSajqXY0Ml0cmQIQKvR1Nr/+8rVWrvVjt0pwsWEPpBNPl0L/xgrHgaQIQj6JAQco14XnY0n6bXEOewswKDWmUxdPYoOgMH+dokjjKuvJAuBDhYiGYrD9XwClduyDORDt3OwmuZYDGEIQLBa4oXLF1J8zF0tIDDwYlN+vh2zx2HxLJ6kIk+2FgW+mnvVi3s3v174GqjeIqoMF8EJtcB+IH4ACqruPdjiAgKR581wStcdfjISjcP0AYe9t6L86uG1aIViWPWL7RPZNY4KR4RsYwk9kXGOA6LVr0VmfJvNslU7+oCb67XlxLRHUNBOMy8EfadIXDoIz3FUch1HW2BNbhkStrujrEqk1B5/zlsFRQ7shmI3ccHr9QByslxcFgs=
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCjp0UvoAQy+wUpfEHr1YVU04htWc0qnVhtSCeXVD1Q8kiz/7itIKKfKGvz+PFU9kNcQlrQaUxQ/lh9SUC0y/epVLcxm3TBI99HTeeWTrO1RLvDIR0CS3iC2USPMEX0jbhF2fUoE+Q+vaZArNsP/zR1fEV2Dc5HW/dgjcKwNN9Xr7p6BujkwOQXM8DdqcTTMIdRoZhisD7LGDfWkro1fcoo0eeMGgdcGx/DJLw0s840t1teVxE0Payt4LGMtg/jOCOCXRTzmvLDSfdxBjxYGhT2IK/GFPoC/L2frFaie0N2dRRGI0j4SBgNQbJudQanJvsuT35UkMUrxgkANyrbFQmVmcJhuwo3mbXRLaBSojpBv3AQ3eF5X1WKvTNcZ3H04E0acReUtQcy00CP+8rI1uZ+bhC6NxgR2g1GPKoJZA2EJp4LF9oqyczQzKz62dXGXV5I9c2Sf2Q+q4bVIQjKc79U5EdQnQkTEIyEfI+ib+XvclrT1c1M95uTw1cogOUBDhk=
