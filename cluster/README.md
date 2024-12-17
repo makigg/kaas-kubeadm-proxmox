@@ -84,7 +84,7 @@ metadata:
     csi-proxmox: "true"
 spec:
   topology:
-    class: kubeadm-v1.30.5
+    class: kubeadm
     version: v1.30.5
     controlPlane:
       replicas: 1

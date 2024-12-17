@@ -1,26 +1,26 @@
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: ClusterClass
 metadata:
-  name: kubeadm-v1.30.5
+  name: kubeadm
   namespace: kaas
 spec:
   controlPlane:
     ref:
       apiVersion: controlplane.cluster.x-k8s.io/v1beta1
       kind: KubeadmControlPlaneTemplate
-      name: kubeadm-v1.30.5
+      name: kubeadm
       namespace: kaas
     machineInfrastructure:
       ref:
         apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
         kind: ProxmoxMachineTemplate
-        name: kubeadm-v1.30.5-control-plane
+        name: kubeadm-control-plane
         namespace: kaas
   infrastructure:
     ref:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
       kind: ProxmoxClusterTemplate
-      name: kubeadm-v1.30.5
+      name: kubeadm
       namespace: kaas
   workers:
     machineDeployments:
@@ -30,13 +30,13 @@ spec:
           ref:
             apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
             kind: KubeadmConfigTemplate
-            name: kubeadm-v1.30.5-default-worker
+            name: kubeadm-default-worker
             namespace: kaas
         infrastructure:
           ref:
             apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
             kind: ProxmoxMachineTemplate
-            name: kubeadm-v1.30.5-default-worker
+            name: kubeadm-default-worker
             namespace: kaas
   variables:
   - name: controlPlaneHost
