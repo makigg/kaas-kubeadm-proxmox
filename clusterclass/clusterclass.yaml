@@ -4,6 +4,12 @@ metadata:
   name: kubeadm
   namespace: kaas
 spec:
+  infrastructure:
+    ref:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+      kind: ProxmoxClusterTemplate
+      name: kubeadm
+      namespace: kaas
   controlPlane:
     ref:
       apiVersion: controlplane.cluster.x-k8s.io/v1beta1
@@ -16,12 +22,6 @@ spec:
         kind: ProxmoxMachineTemplate
         name: kubeadm-control-plane
         namespace: kaas
-  infrastructure:
-    ref:
-      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
-      kind: ProxmoxClusterTemplate
-      name: kubeadm
-      namespace: kaas
   workers:
     machineDeployments:
     - class: default-worker
